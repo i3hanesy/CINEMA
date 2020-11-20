@@ -1,6 +1,8 @@
 import React from "react";
 import PropTypes from "prop-types";
-import {Switch, Route, BrowserRouter, Link} from "react-router-dom";
+import {Switch, Route, Router as BrowserRouter, Link} from "react-router-dom";
+import {connect} from "react-redux";
+import browserHistory from "../../browser-history";
 
 import MainScreen from "../main-screen/main-screen";
 import LoginScreen from "../login/login-screen";
@@ -9,20 +11,24 @@ import FilmScreen from "../film/film-screen";
 import PlayerScreen from "../player/player-screen";
 import ReviewScreen from "../review/review-screen";
 
+import withVideo from "../../hocs/with-video/with-video";
+import withFilm from "../../hocs/with-film/with-film";
+
+const FilmPlayer = withVideo(PlayerScreen);
+const FilmScreenWrapped = withFilm(FilmScreen);
 
 const App = (props) => {
   const {films} = props;
-  const filmData = films[0];
+  const promoFilm = films[0];
 
   return (
-    <BrowserRouter>
+    <BrowserRouter history={browserHistory}>
       <Switch>
         <Route exact
           path="/"
           render={({history}) => (
             <MainScreen
               onPlayFilmButtonClick={() => history.push(`/player/:id`)}
-              films ={films}
             />
           )}
         />
@@ -35,22 +41,22 @@ const App = (props) => {
         </Route>
         <Route exact
           path="/films/:id"
-          render={({history}) => (
-            <FilmScreen
-              onPlayFilmButtonClick={() => history.push(`/player/:id`)}
-              filmData ={filmData}
-              films={films}
+          render={({history, match}) => (
+            <FilmScreenWrapped
+              onPlayFilmButtonClick={(id) => history.push(`/player/${id}`)}
+              id={Number(match.params.id)}
             />
           )}
         />
         <Route exact path="/films/:id/review">
-          <ReviewScreen filmData ={filmData}/>
+          <ReviewScreen filmData ={promoFilm}/>
         </Route>
         <Route exact
           path="/player/:id"
           render={({history}) => (
-            <PlayerScreen
+            <FilmPlayer
               onExitButtonClick={() => history.push(`/`)}
+              {...promoFilm}
             />
           )}/>
         <Route
@@ -70,8 +76,14 @@ const App = (props) => {
   );
 };
 
+const mapStateToProps = ({DATA}) => ({
+  films: DATA.films,
+});
+
+
 App.propTypes = {
   films: PropTypes.array.isRequired,
 };
 
-export default App;
+export {App};
+export default connect(mapStateToProps)(App);

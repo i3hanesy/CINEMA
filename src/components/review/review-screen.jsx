@@ -3,16 +3,20 @@ import ReviewForm from "../review-form/review-form";
 import PropTypes from "prop-types";
 import {Link} from "react-router-dom";
 
+import withReviewForm from "../../hocs/with-review-form/with-review-form";
+const ReviewFormWrapped = withReviewForm(ReviewForm);
+
 const ReviewScreen = (props) => {
   const {filmData} = props;
+  const {backgroundImage, name, posterImage, id} = filmData;
 
   return (
     <section className="movie-card movie-card--full">
       <div className="movie-card__header">
         <div className="movie-card__bg">
           <img
-            src={filmData.filmBackGround}
-            alt={filmData.filmTitle} />
+            src={backgroundImage}
+            alt={name} />
         </div>
 
         <h1 className="visually-hidden">WTW</h1>
@@ -29,7 +33,7 @@ const ReviewScreen = (props) => {
           <nav className="breadcrumbs">
             <ul className="breadcrumbs__list">
               <li className="breadcrumbs__item">
-                <Link to={`/films/${filmData.id}`} className="breadcrumbs__link">{filmData.filmTitle}</Link>
+                <Link to={`/films/${id}`} className="breadcrumbs__link">{name}</Link>
               </li>
               <li className="breadcrumbs__item">
                 <a className="breadcrumbs__link">Add review</a>
@@ -46,15 +50,15 @@ const ReviewScreen = (props) => {
 
         <div className="movie-card__poster movie-card__poster--small">
           <img
-            src={filmData.filmPoster}
-            alt={filmData.filmTitle}
+            src={posterImage}
+            alt={name}
             width="218"
             height="327" />
         </div>
       </div>
 
       <div className="add-review">
-        <ReviewForm />
+        <ReviewFormWrapped />
       </div>
 
     </section>
@@ -63,11 +67,11 @@ const ReviewScreen = (props) => {
 
 ReviewScreen.propTypes = {
   filmData: PropTypes.shape({
-    id: PropTypes.number.isRequired,
-    filmBackGround: PropTypes.string.isRequired,
-    filmPoster: PropTypes.string.isRequired,
-    filmTitle: PropTypes.string.isRequired,
-  }).isRequired,
+    id: PropTypes.number,
+    backgroundImage: PropTypes.string,
+    posterImage: PropTypes.string,
+    name: PropTypes.string,
+  }),
 };
 
 export default ReviewScreen;

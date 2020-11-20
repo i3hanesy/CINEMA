@@ -5,7 +5,8 @@ import {formatDate} from "../../utils/film.js";
 
 const ReviewScreen = (props) => {
   const {filmComment} = props;
-  const {comment, commentAutor, rating, commentDate} = filmComment;
+  const {comment, user, rating, date} = filmComment;
+  const {name} = user;
 
   return (
     <div className="review">
@@ -13,11 +14,11 @@ const ReviewScreen = (props) => {
         <p className="review__text">{comment}</p>
 
         <footer className="review__details">
-          <cite className="review__author">{commentAutor}</cite>
+          <cite className="review__author">{name}</cite>
           <time
             className="review__date"
-            dateTime={formatDate(commentDate, `YYYY-M-D`)}>
-            {formatDate(commentDate, `MMMM DD, YYYY`)}
+            dateTime={formatDate(date, `YYYY-M-D`)}>
+            {formatDate(date, `MMMM DD, YYYY`)}
           </time>
         </footer>
       </blockquote>
@@ -30,10 +31,12 @@ const ReviewScreen = (props) => {
 ReviewScreen.propTypes = {
   filmComment: PropTypes.shape({
     comment: PropTypes.string.isRequired,
-    commentAutor: PropTypes.string.isRequired,
-    rating: PropTypes.string.isRequired,
-    commentDate: PropTypes.string.isRequired,
-  }).isRequired,
+    user: PropTypes.shape({
+      name: PropTypes.string.isRequired,
+    }),
+    rating: PropTypes.number.isRequired,
+    date: PropTypes.string.isRequired,
+  }),
 };
 
 export default ReviewScreen;

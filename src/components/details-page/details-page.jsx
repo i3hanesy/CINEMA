@@ -4,7 +4,7 @@ import {formatFilmDuration} from "../../utils/film.js";
 
 const DetailsPage = (props) => {
   const {filmData} = props;
-  const {filmRegisseur, filmDuration, filmGenres, filmDate, filmActors} = filmData;
+  const {director, runTime, genre, released, starring} = filmData;
 
   return (
     <React.Fragment>
@@ -12,12 +12,12 @@ const DetailsPage = (props) => {
         <div className="movie-card__text-col">
           <p className="movie-card__details-item">
             <strong className="movie-card__details-name">Director</strong>
-            <span className="movie-card__details-value">{filmRegisseur}</span>
+            <span className="movie-card__details-value">{director}</span>
           </p>
           <p className="movie-card__details-item">
             <strong className="movie-card__details-name">Starring</strong>
             <span className="movie-card__details-value">
-              {filmActors.join(`, \n`)}
+              {starring.join(`, \n`)}
             </span>
           </p>
         </div>
@@ -25,15 +25,15 @@ const DetailsPage = (props) => {
         <div className="movie-card__text-col">
           <p className="movie-card__details-item">
             <strong className="movie-card__details-name">Run Time</strong>
-            <span className="movie-card__details-value">{formatFilmDuration(filmDuration)}</span>
+            <span className="movie-card__details-value">{formatFilmDuration(runTime)}</span>
           </p>
           <p className="movie-card__details-item">
             <strong className="movie-card__details-name">Genre</strong>
-            <span className="movie-card__details-value">{filmGenres}</span>
+            <span className="movie-card__details-value">{genre}</span>
           </p>
           <p className="movie-card__details-item">
             <strong className="movie-card__details-name">Released</strong>
-            <span className="movie-card__details-value">{filmDate}</span>
+            <span className="movie-card__details-value">{released}</span>
           </p>
         </div>
       </div>
@@ -43,14 +43,11 @@ const DetailsPage = (props) => {
 
 DetailsPage.propTypes = {
   filmData: PropTypes.shape({
-    filmActors: PropTypes.array.isRequired,
-    filmRating: PropTypes.string.isRequired,
-    voiceCount: PropTypes.string.isRequired,
-    filmDescription: PropTypes.string.isRequired,
-    filmRegisseur: PropTypes.string.isRequired,
-    filmDuration: PropTypes.number.isRequired,
-    filmGenres: PropTypes.string.isRequired,
-    filmDate: PropTypes.string.isRequired,
+    starring: PropTypes.array.isRequired,
+    director: PropTypes.string.isRequired,
+    runTime: PropTypes.number.isRequired,
+    genre: PropTypes.string.isRequired,
+    released: PropTypes.number.isRequired,
   }).isRequired,
 };
 

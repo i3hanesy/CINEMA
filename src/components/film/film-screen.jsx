@@ -1,14 +1,18 @@
 import React from "react";
+import {connect} from "react-redux";
 import PropTypes from "prop-types";
 import {Link} from "react-router-dom";
 import TabsScreen from "../tabs/tabs";
 import MovieList from "../movie-list/movie-list";
+import {getLikeFilms} from "../../store/selectors";
+
+import withTabs from "../../hocs/with-tabs/with-tabs";
+
+const TabsScreenWrapped = withTabs(TabsScreen);
 
 const FilmScreen = (props) => {
-  const {films, filmData, onPlayFilmButtonClick} = props;
-  const likeFilms = films.filter((item) =>
-    item.filmGenres === filmData.filmGenres
-    && item.id !== filmData.id).slice(0, 4);
+  const {filmData, onPlayFilmButtonClick, likeFilms} = props;
+  const {name, id, backgroundImage, genre, released, posterImage} = filmData;
 
   return (
     <React.Fragment>
@@ -16,8 +20,8 @@ const FilmScreen = (props) => {
         <div className="movie-card__hero">
           <div className="movie-card__bg">
             <img
-              src={filmData.filmBackGround}
-              alt={filmData.filmTitle} />
+              src={backgroundImage}
+              alt={name} />
           </div>
 
           <h1 className="visually-hidden">WTW</h1>
@@ -40,10 +44,10 @@ const FilmScreen = (props) => {
 
           <div className="movie-card__wrap">
             <div className="movie-card__desc">
-              <h2 className="movie-card__title">{filmData.filmTitle}</h2>
+              <h2 className="movie-card__title">{name}</h2>
               <p className="movie-card__meta">
-                <span className="movie-card__genre">{filmData.filmGenres}</span>
-                <span className="movie-card__year">{filmData.filmDate}</span>
+                <span className="movie-card__genre">{genre}</span>
+                <span className="movie-card__year">{released}</span>
               </p>
 
               <div className="movie-card__buttons">
@@ -62,7 +66,7 @@ const FilmScreen = (props) => {
                   </svg>
                   <span>My list</span>
                 </button>
-                <Link to={`/films/${filmData.id}/review`} className="btn movie-card__button">Add review</Link>
+                <Link to={`/films/${id}/review`} className="btn movie-card__button">Add review</Link>
               </div>
             </div>
           </div>
@@ -72,13 +76,13 @@ const FilmScreen = (props) => {
           <div className="movie-card__info">
             <div className="movie-card__poster movie-card__poster--big">
               <img
-                src={filmData.filmPoster}
-                alt={filmData.filmTitle}
+                src={posterImage}
+                alt={name}
                 width="218" height="327" />
             </div>
 
             <div className="movie-card__desc">
-              <TabsScreen film={filmData}/>
+              <TabsScreenWrapped film={filmData}/>
             </div>
           </div>
         </div>
@@ -109,20 +113,22 @@ const FilmScreen = (props) => {
   );
 };
 
+const mapStateToProps = (state, props) => ({
+  likeFilms: getLikeFilms(state, props),
+});
+
 FilmScreen.propTypes = {
   filmData: PropTypes.shape({
     id: PropTypes.number.isRequired,
-    filmBackGround: PropTypes.string.isRequired,
-    filmPoster: PropTypes.string.isRequired,
-    filmTitle: PropTypes.string.isRequired,
-    filmActors: PropTypes.array.isRequired,
-    filmGenres: PropTypes.string.isRequired,
-    filmDate: PropTypes.string.isRequired,
-    filmRating: PropTypes.string.isRequired,
-    voiceCount: PropTypes.string.isRequired,
-  }).isRequired,
-  films: PropTypes.array.isRequired,
+    backgroundImage: PropTypes.string.isRequired,
+    posterImage: PropTypes.string.isRequired,
+    name: PropTypes.string.isRequired,
+    genre: PropTypes.string.isRequired,
+    released: PropTypes.number.isRequired,
+  }),
   onPlayFilmButtonClick: PropTypes.func.isRequired,
+  likeFilms: PropTypes.array.isRequired,
 };
 
-export default FilmScreen;
+export {FilmScreen};
+export default connect(mapStateToProps, null)(FilmScreen);

@@ -1,17 +1,19 @@
 import React from "react";
 import PropTypes from "prop-types";
-import MovieList from "../movie-list/movie-list";
-
+import {connect} from "react-redux";
+// import MovieList from "../movie-list/movie-list";
+import GenreList from "../genre-list/genre-list";
+// import ShowMoreButton from "../show-more-button/show-more-button";
 
 const MainScreen = (props) => {
-  const {films, onPlayFilmButtonClick} = props;
-  const promoFilm = films[0];
+  const {promoFilm, onPlayFilmButtonClick} = props;
+  const {name, posterImage, backgroundImage, genre, released} = promoFilm;
 
   return (
     <React.Fragment>
       <section className="movie-card">
         <div className="movie-card__bg">
-          <img src={promoFilm.filmBackGround} alt="The Grand Budapest Hotel" />
+          <img src={backgroundImage} alt={name} />
         </div>
 
         <h1 className="visually-hidden">WTW</h1>
@@ -35,14 +37,14 @@ const MainScreen = (props) => {
         <div className="movie-card__wrap">
           <div className="movie-card__info">
             <div className="movie-card__poster">
-              <img src={promoFilm.filmPoster} alt={promoFilm.filmTitle} width="218" height="327" />
+              <img src={posterImage} alt={name} width="218" height="327" />
             </div>
 
             <div className="movie-card__desc">
-              <h2 className="movie-card__title">{promoFilm.filmTitle}</h2>
+              <h2 className="movie-card__title">{name}</h2>
               <p className="movie-card__meta">
-                <span className="movie-card__genre">{promoFilm.filmGenres}</span>
-                <span className="movie-card__year">{promoFilm.filmDate}</span>
+                <span className="movie-card__genre">{genre}</span>
+                <span className="movie-card__year">{released}</span>
               </p>
 
               <div className="movie-card__buttons">
@@ -70,44 +72,7 @@ const MainScreen = (props) => {
         <section className="catalog">
           <h2 className="catalog__title visually-hidden">Catalog</h2>
 
-          <ul className="catalog__genres-list">
-            <li className="catalog__genres-item catalog__genres-item--active">
-              <a href="#" className="catalog__genres-link">All genres</a>
-            </li>
-            <li className="catalog__genres-item">
-              <a href="#" className="catalog__genres-link">Comedies</a>
-            </li>
-            <li className="catalog__genres-item">
-              <a href="#" className="catalog__genres-link">Crime</a>
-            </li>
-            <li className="catalog__genres-item">
-              <a href="#" className="catalog__genres-link">Documentary</a>
-            </li>
-            <li className="catalog__genres-item">
-              <a href="#" className="catalog__genres-link">Dramas</a>
-            </li>
-            <li className="catalog__genres-item">
-              <a href="#" className="catalog__genres-link">Horror</a>
-            </li>
-            <li className="catalog__genres-item">
-              <a href="#" className="catalog__genres-link">Kids & Family</a>
-            </li>
-            <li className="catalog__genres-item">
-              <a href="#" className="catalog__genres-link">Romance</a>
-            </li>
-            <li className="catalog__genres-item">
-              <a href="#" className="catalog__genres-link">Sci-Fi</a>
-            </li>
-            <li className="catalog__genres-item">
-              <a href="#" className="catalog__genres-link">Thrillers</a>
-            </li>
-          </ul>
-
-          <MovieList films={films} />
-
-          <div className="catalog__more">
-            <button className="catalog__button" type="button">Show more</button>
-          </div>
+          <GenreList/>
         </section>
 
         <footer className="page-footer">
@@ -128,16 +93,25 @@ const MainScreen = (props) => {
   );
 };
 
+
+const mapStateToProps = ({DATA}) => ({
+  promoFilm: DATA.promoFilm,
+});
+
+
 MainScreen.propTypes = {
-  films: PropTypes.arrayOf(PropTypes.shape({
+  promoFilm: PropTypes.shape({
     id: PropTypes.number.isRequired,
-    filmPoster: PropTypes.string.isRequired,
-    filmTitle: PropTypes.string.isRequired,
-    filmBackGround: PropTypes.string.isRequired,
-    filmGenres: PropTypes.string.isRequired,
-    filmDate: PropTypes.string.isRequired,
-  })).isRequired,
+    posterImage: PropTypes.string.isRequired,
+    name: PropTypes.string.isRequired,
+    backgroundImage: PropTypes.string.isRequired,
+    genre: PropTypes.string.isRequired,
+    released: PropTypes.number.isRequired,
+  }).isRequired,
   onPlayFilmButtonClick: PropTypes.func.isRequired,
+
 };
 
-export default MainScreen;
+
+export {MainScreen};
+export default connect(mapStateToProps)(MainScreen);

@@ -2,7 +2,7 @@ import {generateFilmComments} from "./reviews.js";
 import {getRandomInteger, getRandomArrayElements, generateId, generateFilmRating} from "../utils/common.js";
 
 const MIN_FILM_DURATION = 60;
-const FILMS_COUNT = 8;
+const FILMS_COUNT = 33;
 
 const generatefilmTitle = () => {
   const filmTitles = [
@@ -135,4 +135,3 @@ const generateFilms = (count) => {
 };
 
 export default generateFilms(FILMS_COUNT);
-
